@@ -1,4 +1,3 @@
-import TodoItemModel from "../model/item";
 
 const key = "webcomponents-todoapp";
 const defaultTodos = [
@@ -7,7 +6,7 @@ const defaultTodos = [
 ];
 
 export default class TodoService {
-  private static checkLocalStorage() {
+  static checkLocalStorage() {
     if (!localStorage)
       throw new Error("Your browser does not support localStorage");
   }
@@ -16,11 +15,11 @@ export default class TodoService {
     this.checkLocalStorage();
 
     const data = localStorage.getItem(key);
-    const model = JSON.parse(data) as { todos: TodoItemModel[] };
+    const model = JSON.parse(data);
     return model?.todos ?? [...defaultTodos];
   }
 
-  static save(todos: TodoItemModel[]) {
+  static save(todos) {
     this.checkLocalStorage();
 
     if (!todos) return;

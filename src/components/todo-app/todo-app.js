@@ -1,7 +1,5 @@
 import { html, LitElement } from "lit";
-import { customElement, state } from "lit/decorators";
 
-import TodoItemModel from "../../model/item";
 import styles from "./todo-app.css";
 
 // Required custom elements
@@ -10,18 +8,25 @@ import "../todo-add/todo-add";
 import "../todo-progress/todo-progress";
 import TodoService from "../../services/todos.service"
 
-@customElement("todo-app")
 export default class TodoAppElement extends LitElement {
   static styles = styles;
 
-  @state()
-  private _todos: TodoItemModel[] = TodoService.load();
+  static get properties() {
+    return {
+      _todos: {state: true}
+    }
+  }
+
+  constructor() {
+    super();
+    this._todos = TodoService.load();
+  }
 
   /**
    * Handle 'toggle-done' event from <todo-list> element
-   * @param e the event fired by TodoListElement
+   * @param {CustomEvent} e the event fired by TodoListElement
    */
-  private _onToggleDone(e: CustomEvent) {
+  _onToggleDone(e) {
     const index = e.detail;
     this._todos = this._todos.map((todo, i) =>
       i === index ? { ...todo, done: !todo.done } : todo
@@ -30,18 +35,18 @@ export default class TodoAppElement extends LitElement {
 
   /**
    * Handle 'delete-todo' event from <todo-list> element
-   * @param e the event fired by TodoListElement
+   * @param {CustomEvent} e the event fired by TodoListElement
    */
-  private _onDeleteTodo(e: CustomEvent) {
+  _onDeleteTodo(e) {
     const index = e.detail;
     this._todos = this._todos.filter((_, i) => i !== index);
   }
 
   /**
    * Handle 'todo-added' event from <todo-add> element
-   * @param e the event fired by TodoAddElement
+   * @param {CustomEvent} e the event fired by TodoAddElement
    */
-  private _onTodoAdded(e: CustomEvent) {
+  _onTodoAdded(e) {
     const text = e.detail;
 
     // Filter predicates
@@ -86,3 +91,5 @@ export default class TodoAppElement extends LitElement {
     `;
   }
 }
+
+window.customElements.define("todo-app", TodoAppElement);

@@ -1,23 +1,35 @@
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators';
 import { styleMap } from 'lit/directives/style-map';
 
 import styles from './todo-progress.css';
 
-function bound(value: number, range: [number, number]) {
+/**
+ * Bounds a number between min and max.
+ * @param {number} value The value
+ * @param {number} range A tuple of the [min, max] bounds
+ * @returns The value between min and max
+ */
+function bound(value, range) {
   let [min, max] = range
   if (max < min) [min, max] = [max, min]
   return (value < min) ? min : (value > max) ? max : value;
 }
 
-@customElement('todo-progress')
 export default class TodoProgressElement extends LitElement {
   static styles = styles
 
-  @property({
-    type: Number
-  })
-  percent: number = 0
+  static get properties() {
+    return {
+      percent: {
+        type: Number
+      }
+    }
+  }
+
+  constructor() {
+    super();
+    this.percent = 0;
+  }
 
   render() {
     const percent = bound(this.percent, [0, 100]);
@@ -29,3 +41,5 @@ export default class TodoProgressElement extends LitElement {
     `;
   }
 }
+
+window.customElements.define("todo-progress", TodoProgressElement);

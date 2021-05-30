@@ -1,27 +1,33 @@
 import { html, LitElement } from "lit";
-import { customElement, property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 
-import TodoItemModel from "../../model/item";
 
 import styles from "./todo-item.css";
 
-@customElement("todo-item")
 export default class TodoItemElement extends LitElement {
   static styles = styles;
 
-  @property({ type: Object })
-  todo: TodoItemModel;
+  static get properties() {
+    return {
+      todo: {type: Object}
+    }
+  }
 
-  private _toggleDone() {
+  /**
+   * Emits 'toggle-done' event to the parent list
+   */
+  _toggleDone() {
     this.dispatchEvent(new CustomEvent("toggle-done"));
   }
 
-  private _deleteTodo() {
+  /**
+   * Emits 'delete-todo' event to the parent list
+   */
+  _deleteTodo() {
     this.dispatchEvent(new CustomEvent("delete-todo"));
   }
 
-  protected render() {
+  render() {
     const { done } = this.todo;
     const classes = {
       check: { checkbox: true, done },
@@ -43,3 +49,5 @@ export default class TodoItemElement extends LitElement {
     `;
   }
 }
+
+window.customElements.define("todo-item", TodoItemElement);
